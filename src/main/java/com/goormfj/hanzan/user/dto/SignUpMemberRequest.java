@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class RegisterMemberRequest {
+public class SignUpMemberRequest {
 
     @NotBlank(message = "Id 는 필수 입력 값입니다.")
     private String userId;

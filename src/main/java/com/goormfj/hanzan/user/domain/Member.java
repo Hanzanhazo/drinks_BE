@@ -12,7 +12,7 @@ import java.time.LocalDate;
 public class Member {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
@@ -29,7 +29,7 @@ public class Member {
     private LocalDate localDate;
     private String phone_Number;
 
-    @Enumerated(value = EnumType.STRING)
+    @Enumerated(EnumType.STRING)
     private Gender gender;
     private String introduction;
     private String profile_picture;
@@ -37,9 +37,14 @@ public class Member {
     @Embedded
     private Preferences preferences; // 취향
 
+    @Enumerated(EnumType.STRING)
+    private Role role;
+
+    // 일반 회원가입
     public Member(String userId, String password, String email) {
         this.userId = userId;
         this.password = password;
         this.email = email;
+        this.role = Role.USER;
     }
 }
