@@ -47,4 +47,10 @@ public class Member {
         this.email = email;
         this.role = Role.USER;
     }
+
+    public Member(String userId, String password, Role role) {
+        this.userId = userId;
+        this.password = password;
+        this.role = role;
+    }
 }
