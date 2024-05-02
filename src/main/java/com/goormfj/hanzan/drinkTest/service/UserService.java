@@ -1,17 +1,21 @@
 package com.goormfj.hanzan.drinkTest.service;
 
-import com.goormfj.hanzan.drinkTest.entity.User;
+import com.goormfj.hanzan.drinkTest.domain.User;
 import com.goormfj.hanzan.drinkTest.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-
+@Service
 public class UserService {
     private final UserRepository userRepository;
 
-
+    @Autowired
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
+    @Transactional
     public User save(User user) {
         try {
             return userRepository.save(user);
@@ -20,6 +24,7 @@ public class UserService {
         }
     }
 
+    @Transactional(readOnly = true)
     public User findById(Long id) {
         // userid 반환
         return userRepository

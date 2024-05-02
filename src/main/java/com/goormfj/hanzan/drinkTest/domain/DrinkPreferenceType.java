@@ -1,4 +1,4 @@
-package com.goormfj.hanzan.drinkTest.entity;
+package com.goormfj.hanzan.drinkTest.domain;
 
 public enum DrinkPreferenceType {
     TYPE_1("모두에게 사랑받는 아이스박스"),
