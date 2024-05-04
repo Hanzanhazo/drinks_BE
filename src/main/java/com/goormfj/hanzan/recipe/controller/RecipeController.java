@@ -10,14 +10,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
-@RequestMapping("/api/recipes")
+@RequestMapping("/api")
 public class RecipeController {
     @Autowired
     private RecipeService recipeService;
@@ -25,97 +22,87 @@ public class RecipeController {
     @Autowired
     private LikeService likeService;
 
-    @PutMapping("/{id}")
-    public ResponseEntity<RecipeDTO> updateRecipe(@PathVariable Long id, @RequestBody RecipeDTO recipeDTO) {
-        RecipeDTO updatedRecipe = recipeService.updateRecipe(id, recipeDTO);
-        return ResponseEntity.ok(updatedRecipe);
+    // Recipe Management
+    @PostMapping("/recipes/create")
+    public ResponseEntity<RecipeDTO> createRecipe(@RequestBody RecipeDTO recipeDTO) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(recipeService.createRecipe(recipeDTO));
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/recipes/details/{id}")
     public ResponseEntity<RecipeDTO> getRecipeDetails(@PathVariable Long id) {
-        RecipeDTO recipe = recipeService.getRecipeDetails(id);
-        return ResponseEntity.ok(recipe);
+        return ResponseEntity.ok(recipeService.getRecipeDetails(id));
     }
 
-    @DeleteMapping("/{id}")
+    @PutMapping("/recipes/update/{id}")
+    public ResponseEntity<RecipeDTO> updateRecipe(@PathVariable Long id, @RequestBody RecipeDTO recipeDTO) {
+        return ResponseEntity.ok(recipeService.updateRecipe(id, recipeDTO));
+    }
+
+    @DeleteMapping("/recipes/delete/{id}")
     public ResponseEntity<Void> deleteRecipe(@PathVariable Long id) {
         recipeService.deleteRecipe(id);
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/like/{id}")
+    // Like and Dislike
+    @PostMapping("/recipes/{id}/like")
     public ResponseEntity<Void> likeRecipe(@PathVariable Long id) {
         likeService.likeRecipe(id);
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/dislike/{id}")
+    @PostMapping("/recipes/{id}/dislike")
     public ResponseEntity<Void> dislikeRecipe(@PathVariable Long id) {
         likeService.dislikeRecipe(id);
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/popular")
+    // Recipe Search and Listing
+    @GetMapping("/recipes/popular")
     public ResponseEntity<List<RecipeDTO>> getPopularRecipes() {
-        List<RecipeDTO> popularRecipes = recipeService.getPopularRecipes();
-        return ResponseEntity.ok(popularRecipes);
+        return ResponseEntity.ok(recipeService.getPopularRecipes());
     }
 
-    @GetMapping("/type/{type}")
+    @GetMapping("/recipes/type/{type}")
     public ResponseEntity<Page<RecipeDTO>> getRecipesByType(@PathVariable String type, Pageable pageable) {
-        Page<RecipeDTO> page = recipeService.getRecipesByType(type, pageable);
-        return ResponseEntity.ok(page);
+        return ResponseEntity.ok(recipeService.getRecipesByType(type, pageable));
     }
 
-    @PostMapping("/{recipeId}/comments")
-    public ResponseEntity<CommentDTO> addComment(@PathVariable Long recipeId, @RequestBody CommentDTO commentDTO) {
-        CommentDTO savedComment = recipeService.addComment(recipeId, commentDTO);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedComment);
-    }
-
-    @GetMapping("/{recipeId}/comments")
-    public ResponseEntity<List<CommentDTO>> getComments(@PathVariable Long recipeId) {
-        List<CommentDTO> comments = recipeService.getComments(recipeId);
-        return ResponseEntity.ok(comments);
-    }
-
-    @PostMapping("/")
-    public ResponseEntity<RecipeDTO> createRecipe(@RequestBody RecipeDTO recipeDTO) {
-        RecipeDTO newRecipe = recipeService.createRecipe(recipeDTO);
-        return ResponseEntity.status(HttpStatus.CREATED).body(newRecipe);
-    }
-
-    @GetMapping("/")
-    public ResponseEntity<Page<RecipeDTO>> getAllRecipes(Pageable pageable) {
-        Page<RecipeDTO> page = recipeService.getRecipes(pageable);
-        return ResponseEntity.ok(page);
-    }
-
-    @PatchMapping("/{id}/tags")
-    public ResponseEntity<RecipeDTO> updateRecipeTags(@PathVariable Long id, @RequestBody List<String> tags) {
-        RecipeDTO recipe = recipeService.updateRecipeTags(id, tags);
-        return ResponseEntity.ok(recipe);
-    }
-
-    @GetMapping("/search")
+    @GetMapping("/recipes/search")
     public ResponseEntity<Page<RecipeDTO>> getRecipesByTags(@RequestBody List<String> tags, Pageable pageable) {
-        Page<RecipeDTO> recipes = recipeService.findRecipesByTags(tags, pageable);
-        return ResponseEntity.ok(recipes);
+        return ResponseEntity.ok(recipeService.findRecipesByTags(tags, pageable));
     }
 
-    @PatchMapping("/{id}/visibility")
+    // Comments Management
+    @PostMapping("/recipes/{recipeId}/comments/add")
+    public ResponseEntity<CommentDTO> addComment(@PathVariable Long recipeId, @RequestBody CommentDTO commentDTO) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(recipeService.addComment(recipeId, commentDTO));
+    }
+
+    @GetMapping("/recipes/{recipeId}/comments/view")
+    public ResponseEntity<List<CommentDTO>> getComments(@PathVariable Long recipeId) {
+        return ResponseEntity.ok(recipeService.getComments(recipeId));
+    }
+
+    // Tags and Visibility
+    @PatchMapping("/recipes/{id}/tags/update")
+    public ResponseEntity<RecipeDTO> updateRecipeTags(@PathVariable Long id, @RequestBody List<String> tags) {
+        return ResponseEntity.ok(recipeService.updateRecipeTags(id, tags));
+    }
+
+    @PatchMapping("/recipes/{id}/visibility/update")
     public ResponseEntity<Void> updateRecipeVisibility(@PathVariable Long id, @RequestBody boolean isPublic) {
         recipeService.updateRecipeVisibility(id, isPublic);
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/categories")
+    // Category Management
+    @PostMapping("/categories/create")
     public ResponseEntity<String> createCategory(@RequestBody String category) {
-        String newCategory = recipeService.createCategory(category);
-        return ResponseEntity.status(HttpStatus.CREATED).body(newCategory);
+        return ResponseEntity.status(HttpStatus.CREATED).body(recipeService.createCategory(category));
     }
 
-    @DeleteMapping("/categories/{id}")
+    @DeleteMapping("/categories/delete/{id}")
     public ResponseEntity<Void> deleteCategory(@PathVariable Long id) {
         recipeService.deleteCategory(id);
         return ResponseEntity.ok().build();
