@@ -23,7 +23,8 @@ public class SecurityConfig {
                 .authorizeRequests(auth -> auth
                         .requestMatchers("/**").permitAll()
                         .anyRequest().authenticated())
-                .httpBasic();
+        // httpBasic() 라인을 제거함
+        ;
 
         return http.build();
     }
