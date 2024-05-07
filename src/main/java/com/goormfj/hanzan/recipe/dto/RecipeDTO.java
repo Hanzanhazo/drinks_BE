@@ -4,6 +4,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
+
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -20,7 +22,15 @@ public class RecipeDTO {
     private TypeDTO types;
 
     @NotEmpty(message = "Ingredients list cannot be empty.")
-    private List<IngredientDTO> ingredients;
+    private List<IngredientDTO> ingredientDTOS = new ArrayList<>();
+
+    public List<IngredientDTO> getIngredients() {
+        return ingredientDTOS;
+    }
+
+    public void setIngredients(List<IngredientDTO> ingredientDTOS) {
+        this.ingredientDTOS = ingredientDTOS;
+    }
 
     @NotEmpty(message = "Steps list cannot be empty.")
     private List<StepDTO> steps;

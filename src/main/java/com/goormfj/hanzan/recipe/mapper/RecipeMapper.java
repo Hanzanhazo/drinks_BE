@@ -21,9 +21,11 @@ public interface RecipeMapper {
     RecipeMapper INSTANCE = Mappers.getMapper(RecipeMapper.class);
 
     @Mapping(target = "types", source = "type")
+    @Mapping(target = "ingredientDTOS", source = "ingredients")
     RecipeDTO recipeToRecipeDTO(Recipe recipe);
 
     @Mapping(target = "type", source = "types")
+    @Mapping(target = "ingredients", source = "ingredientDTOS")
     Recipe recipeDTOToRecipe(RecipeDTO recipeDTO);
 
     List<CommentDTO> mapComments(List<Comment> comments);
