@@ -37,11 +37,6 @@ public class MemberController {
         return "admin";
     }
 
-    // 로그인
-//    @PostMapping("/login")
-//    public ResponseEntity<?> login(@RequestBody @Valid LoginRequest loginRequest) {
-//        String userId = loginRequest.getUserId();
-//        String password = loginRequest.getPassword();
-//    }
+
 
 }

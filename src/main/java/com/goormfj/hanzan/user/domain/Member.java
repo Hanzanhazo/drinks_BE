@@ -40,17 +40,18 @@ public class Member {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+
+    public Member(String userId, String password, Role role) {
+        this.userId = userId;
+        this.password = password;
+        this.role = role;
+    }
+
     // 일반 회원가입
     public Member(String userId, String password, String email) {
         this.userId = userId;
         this.password = password;
         this.email = email;
         this.role = Role.USER;
-    }
-
-    public Member(String userId, String password, Role role) {
-        this.userId = userId;
-        this.password = password;
-        this.role = role;
     }
 }

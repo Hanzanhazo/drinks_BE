@@ -30,7 +30,7 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public String getUsername() {
-        return member.getUserId();
+        return member.getName();
     }
 
     @Override
@@ -51,5 +51,9 @@ public class CustomUserDetails implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    public String getUserId() {
+        return member.getUserId();
     }
 }
