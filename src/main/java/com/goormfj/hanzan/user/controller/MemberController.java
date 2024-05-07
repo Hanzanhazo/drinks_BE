@@ -34,6 +34,25 @@ public class MemberController {
         }
     }
 
+    // 아이디 찾기
+    @PostMapping("/findId")
+    public ResponseEntity<FindUserIdResponse> findMemberId(@RequestBody @Valid FindUserIdRequest findUserIdRequest) {
+        log.info("아이디 찾기 요청: {}", findUserIdRequest);
+        try {
+            String userId = memberService.findMemberId(findUserIdRequest);
+            if (userId != null) {
+                log.info("아이디 찾기 성공: {}", userId);
+                return ResponseEntity.ok(new FindUserIdResponse(userId));
+            } else {
+                log.warn("아이디 찾기 실패, 사용자 정보 없음: {}", findUserIdRequest);
+                return ResponseEntity.badRequest().body(new FindUserIdResponse(null, "사용자 정보를 찾을 수 없습니다."));
+            }
 
+        } catch (Exception e) {
+            log.error("아이디 찾기 중 오류 발생", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new FindUserIdResponse(null, "서버 내부 오류가 발생했습니다."));
+        }
+
+    }
 
 }

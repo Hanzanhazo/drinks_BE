@@ -89,7 +89,7 @@ public class SecurityConfig {
         // 경로별 인가 작업
         http
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/", "/api/login/**", "/api/users/signup/**").permitAll()
+                        .requestMatchers("/", "/api/login/**", "/api/users/signup/**", "/api/users/findId", "/api/users/findPassword").permitAll()
                         .requestMatchers("/error").permitAll()
                         .requestMatchers("/api/users/admin").hasRole("ADMIN")
                         .requestMatchers("/reissue").permitAll()
