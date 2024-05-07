@@ -1,5 +1,7 @@
 package com.goormfj.hanzan.user.controller;
 
+import com.goormfj.hanzan.user.dto.FindUserIdRequest;
+import com.goormfj.hanzan.user.dto.FindUserIdResponse;
 import com.goormfj.hanzan.user.dto.SignUpMemberRequest;
 import com.goormfj.hanzan.user.service.MemberService;
 import jakarta.validation.Valid;
@@ -7,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -29,12 +32,6 @@ public class MemberController {
             log.error("사용자 등록 오류: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("회원 가입 실패: " + e.getMessage());
         }
-    }
-
-    // 관리자 페이지 확인
-    @GetMapping("/admin")
-    public String adminP() {
-        return "admin";
     }
 
 

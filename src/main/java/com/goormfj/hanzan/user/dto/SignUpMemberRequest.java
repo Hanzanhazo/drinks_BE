@@ -10,6 +10,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class SignUpMemberRequest {
 
+    @NotBlank(message = "이름 은 필수 입력 값입니다.")
+    private String name;
+
     @NotBlank(message = "Id 는 필수 입력 값입니다.")
     private String userId;
 

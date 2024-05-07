@@ -48,7 +48,8 @@ public class Member {
     }
 
     // 일반 회원가입
-    public Member(String userId, String password, String email) {
+    public Member(String name, String userId, String password, String email) {
+        this.name = name;
         this.userId = userId;
         this.password = password;
         this.email = email;
