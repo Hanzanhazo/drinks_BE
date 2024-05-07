@@ -17,10 +17,10 @@ public class RecipeDTO {
     private String description;
 
     @NotBlank(message = "Type cannot be empty.")
-    private String type;
+    private TypeDTO types;
 
     @NotEmpty(message = "Ingredients list cannot be empty.")
-    private List<String> ingredients;
+    private List<IngredientDTO> ingredients;
 
     @NotEmpty(message = "Steps list cannot be empty.")
     private List<StepDTO> steps;

@@ -3,8 +3,7 @@ package com.goormfj.hanzan.recipe.dto;
 import lombok.Data;
 
 @Data
-public class StepDTO {
+public class IngredientDTO {
     private long id;
-    private String description;
-    private String imageUrl;
+    private String value;
 }

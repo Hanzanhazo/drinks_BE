@@ -119,8 +119,8 @@ public class RecipeService {
     private void updateRecipeDetails(Recipe recipe, RecipeDTO recipeDTO) {
         recipe.setName(recipeDTO.getName());
         recipe.setDescription(recipeDTO.getDescription());
-        recipe.setType(recipeDTO.getType());
-        recipe.setIngredients(recipeDTO.getIngredients());
+        recipe.setType(recipeMapper.typeDTOToString(recipeDTO.getTypes()));
+        recipe.setIngredients(recipeMapper.mapIngredientDTOs(recipeDTO.getIngredients()));
         recipe.setSteps(recipeDTO.getSteps());
         recipe.setRecommendationReason(recipeDTO.getRecommendationReason());
         recipe.setTags(recipeDTO.getTags());
