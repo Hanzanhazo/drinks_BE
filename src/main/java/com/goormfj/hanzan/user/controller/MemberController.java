@@ -2,6 +2,7 @@ package com.goormfj.hanzan.user.controller;
 
 import com.goormfj.hanzan.user.dto.FindUserIdRequest;
 import com.goormfj.hanzan.user.dto.FindUserIdResponse;
+import com.goormfj.hanzan.user.dto.FindPasswordRequest;
 import com.goormfj.hanzan.user.dto.SignUpMemberRequest;
 import com.goormfj.hanzan.user.service.MemberService;
 import jakarta.validation.Valid;
@@ -9,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -55,4 +55,18 @@ public class MemberController {
 
     }
 
+
+    // 비밀번호 찾기 - 회원 확인
+    @PostMapping("/findPassword")
+    public ResponseEntity<String> findMemberPassword(@RequestBody @Valid FindPasswordRequest findPasswordRequest) {
+        log.info("비밀번호 찾기 요청: {}", findPasswordRequest);
+
+        return ResponseEntity.ok("");
+    }
+
+    // 비밀번호 찾기 - 비밀번호 재설정
+    @PostMapping("/resetPassword")
+    public ResponseEntity<String> resetPassword(@RequestBody @Valid FindPasswordRequest findPasswordRequest) {
+        return ResponseEntity.ok("");
+    }
 }

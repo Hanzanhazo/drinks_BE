@@ -8,9 +8,9 @@ public interface MemberService {
 
     Member registerNewMember(SignUpMemberRequest signUpMemberRequest);
 
-    Member findMemberByEmail(String email);
-
-    Member findMemberByUserId(String userId);
+//    Member findMemberByEmail(String email);
+//
+//    Member findMemberByUserId(String userId);
 
     String findMemberId(FindUserIdRequest findUserIdRequest);
 
