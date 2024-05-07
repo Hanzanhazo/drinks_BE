@@ -24,9 +24,6 @@ public class MemberServiceImpl implements MemberService {
         isUserIdAvailable(signUpMemberRequest.getUserId());
         isEmailAvailable(signUpMemberRequest.getEmail());
 
-        // 비밀번호 일치 검사
-        checkPasswordMatch(signUpMemberRequest.getPassword(), signUpMemberRequest.getPasswordCheck());
-
         // DTO에서 Entity로 변환 및 비밀번호 암호화
         String name = signUpMemberRequest.getName();
         String userId = signUpMemberRequest.getUserId();

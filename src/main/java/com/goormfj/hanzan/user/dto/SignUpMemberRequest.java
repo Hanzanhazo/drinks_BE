@@ -19,9 +19,6 @@ public class SignUpMemberRequest {
     @NotBlank(message = "비밀번호 는 필수 입력 값입니다.")
     private String password;
 
-    @NotBlank(message = "비밀번호 확인 은 필수 입력 값입니다.")
-    private String passwordCheck;
-
     @NotBlank(message = "이메일 은 필수 입력 값입니다.")
     private String email;
 }
