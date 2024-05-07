@@ -7,6 +7,7 @@ import com.goormfj.hanzan.recipe.entity.Comment;  // Comment 엔티티를 추가
 import com.goormfj.hanzan.recipe.exception.EntityNotFoundException;
 import com.goormfj.hanzan.recipe.mapper.RecipeMapper;
 import com.goormfj.hanzan.recipe.repository.RecipeRepository;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -27,6 +28,7 @@ public class RecipeService {
         recipeRepository.save(recipe);
         return recipeMapper.recipeToRecipeDTO(recipe);
     }
+
 
     public RecipeDTO getRecipeDetails(Long id) {
         Recipe recipe = findRecipeById(id);

@@ -1,5 +1,6 @@
 package com.goormfj.hanzan.recipe.entity;
 
+import com.goormfj.hanzan.recipe.dto.StepDTO;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.NoArgsConstructor;
@@ -22,20 +23,21 @@ public class Recipe {
     @ElementCollection
     private List<String> ingredients = new ArrayList<>();
 
-    @ElementCollection
-    private List<String> steps = new ArrayList<>();
+    @ElementCollection(targetClass = StepDTO.class)
+    private List<StepDTO> steps = new ArrayList<>();
 
     @ElementCollection
     private List<String> tags = new ArrayList<>(); // 태그 리스트
 
     private String recommendationReason;
+
     private int likes;
     private int dislikes;
 
     @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Comment> comments = new ArrayList<>();
 
-    private String imageUrl;
+    private String mainImageUrl;
     private String videoUrl;
     private boolean isPublic;
 

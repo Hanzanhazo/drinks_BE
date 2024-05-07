@@ -14,7 +14,10 @@ import java.util.List;
 public interface RecipeMapper {
     RecipeMapper INSTANCE = Mappers.getMapper(RecipeMapper.class);
 
+    @Mapping(target = "recommendationReason", source = "recommendationReason")
     RecipeDTO recipeToRecipeDTO(Recipe recipe);
+
+    @Mapping(target = "recommendationReason", source = "recommendationReason")
     Recipe recipeDTOToRecipe(RecipeDTO recipeDTO);
 
     @Mapping(target = "parentComment", source = "parentComment")

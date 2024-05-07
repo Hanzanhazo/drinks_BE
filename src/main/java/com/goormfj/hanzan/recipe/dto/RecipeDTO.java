@@ -23,7 +23,7 @@ public class RecipeDTO {
     private List<String> ingredients;
 
     @NotEmpty(message = "Steps list cannot be empty.")
-    private List<String> steps;
+    private List<StepDTO> steps;
 
     private String recommendationReason;
     private int likes;
@@ -31,7 +31,9 @@ public class RecipeDTO {
     private List<String> tags;
     private List<CommentDTO> comments;
 
-    private String imageUrl;
+    private String mainImageUrl;
     private String videoUrl;
     private boolean isPublic;
-}
+
+    }
+
