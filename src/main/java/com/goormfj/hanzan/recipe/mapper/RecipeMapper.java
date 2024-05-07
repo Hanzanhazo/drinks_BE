@@ -36,14 +36,14 @@ public interface RecipeMapper {
         return ingredients.stream()
                 .map(ingredient -> {
                     IngredientDTO dto = new IngredientDTO();
-                    dto.setValue(ingredient);
+                    dto.setQuantity(ingredient);
                     return dto;
                 }).collect(Collectors.toList());
     }
 
     default List<String> mapIngredientDTOs(List<IngredientDTO> ingredientDTOS) {
         return ingredientDTOS.stream()
-                .map(IngredientDTO::getValue)
+                .map(IngredientDTO::getQuantity)
                 .collect(Collectors.toList());
     }
 
@@ -52,6 +52,10 @@ public interface RecipeMapper {
         typeDTO.setSojuType(type.contains("soju"));
         typeDTO.setBeerType(type.contains("beer"));
         typeDTO.setWineType(type.contains("wine"));
+        typeDTO.setSakeType(type.contains("sake"));
+        typeDTO.setVodkaType(type.contains("vodka"));
+        typeDTO.setWhiskeyType(type.contains("whiskey"));
+        typeDTO.setMakgeolliType(type.contains("makgeolli"));
         return typeDTO;
     }
 
