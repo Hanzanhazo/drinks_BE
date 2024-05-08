@@ -1,9 +1,6 @@
 package com.goormfj.hanzan.user.controller;
 
-import com.goormfj.hanzan.user.dto.FindUserIdRequest;
-import com.goormfj.hanzan.user.dto.FindUserIdResponse;
-import com.goormfj.hanzan.user.dto.FindPasswordRequest;
-import com.goormfj.hanzan.user.dto.SignUpMemberRequest;
+import com.goormfj.hanzan.user.dto.*;
 import com.goormfj.hanzan.user.service.MemberService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @Slf4j
-@RequestMapping("/api/users")
+@RequestMapping("/api")
 public class MemberController {
 
     private final MemberService memberService;
@@ -34,8 +31,19 @@ public class MemberController {
         }
     }
 
+    @PostMapping("/signup/check-userid")
+    public ResponseEntity<String> checkUserId(@RequestBody CheckUserIdRequest checkUserIdRequest)  {
+
+            boolean isExists = memberService.checkUserId(checkUserIdRequest);
+            if (!isExists) {
+                return ResponseEntity.ok().body("사용 가능한 아이디 입니다.");
+            } else {
+                return ResponseEntity.status(HttpStatus.CONFLICT).body("사용 중인 아이디 입니다.");
+            }
+    }
+
     // 아이디 찾기
-    @PostMapping("/findId")
+    @PostMapping("/find-userId")
     public ResponseEntity<FindUserIdResponse> findMemberId(@RequestBody @Valid FindUserIdRequest findUserIdRequest) {
         log.info("아이디 찾기 요청: {}", findUserIdRequest);
         try {
@@ -57,15 +65,16 @@ public class MemberController {
 
 
     // 비밀번호 찾기 - 회원 확인
-    @PostMapping("/findPassword")
+    @PostMapping("/find-password")
     public ResponseEntity<String> findMemberPassword(@RequestBody @Valid FindPasswordRequest findPasswordRequest) {
         log.info("비밀번호 찾기 요청: {}", findPasswordRequest);
+        memberService.findMemberPassword(findPasswordRequest);
 
         return ResponseEntity.ok("");
     }
 
     // 비밀번호 찾기 - 비밀번호 재설정
-    @PostMapping("/resetPassword")
+    @PostMapping("/reset-password")
     public ResponseEntity<String> resetPassword(@RequestBody @Valid FindPasswordRequest findPasswordRequest) {
         return ResponseEntity.ok("");
     }
