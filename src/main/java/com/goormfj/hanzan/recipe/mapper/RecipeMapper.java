@@ -34,9 +34,9 @@ public interface RecipeMapper {
 
     default List<IngredientDTO> mapIngredients(List<String> ingredients) {
         return ingredients.stream()
-                .map(ingredient -> {
+                .map(material -> {
                     IngredientDTO dto = new IngredientDTO();
-                    dto.setIngredientname(ingredient);
+                    dto.setMaterial(material);
                     return dto;
                 }).collect(Collectors.toList());
     }
@@ -63,7 +63,11 @@ public interface RecipeMapper {
         StringBuilder typeBuilder = new StringBuilder();
         if (typeDTO.isSojuType()) typeBuilder.append("soju ");
         if (typeDTO.isBeerType()) typeBuilder.append("beer ");
-        if (typeDTO.isWineType()) typeBuilder.append("wind ");
+        if (typeDTO.isWineType()) typeBuilder.append("wine ");
+        if (typeDTO.isSakeType()) typeBuilder.append("sake ");
+        if (typeDTO.isVodkaType()) typeBuilder.append("vodka ");
+        if (typeDTO.isWhiskeyType()) typeBuilder.append("whiskey ");
+        if (typeDTO.isMakgeolliType()) typeBuilder.append("makgeolli");
         return typeBuilder.toString().trim();
     }
 
