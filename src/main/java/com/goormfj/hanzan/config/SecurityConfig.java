@@ -47,9 +47,6 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
-        LoginFilter loginFilter = new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil, refreshRepository);
-        loginFilter.setFilterProcessesUrl("/api/login");
-
         http
                 .cors(corsCustomizer -> corsCustomizer.configurationSource(new CorsConfigurationSource() {
 
@@ -89,21 +86,18 @@ public class SecurityConfig {
         // 경로별 인가 작업
         http
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/", "/api/login/**", "/api/users/signup/**", "/api/users/findId", "/api/users/findPassword").permitAll()
+                        .requestMatchers("/", "/login/**", "/signup/check-userid", "/signup/**", "/find-userId", "/find-password", "/reset-password").permitAll()
                         .requestMatchers("/error").permitAll()
                         .requestMatchers("/api/users/admin").hasRole("ADMIN")
                         .requestMatchers("/reissue").permitAll()
                         .anyRequest().authenticated());
 
         // 필터 추가
-//        http
-//                .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil), UsernamePasswordAuthenticationFilter.class);
+        http
+                .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil, refreshRepository), UsernamePasswordAuthenticationFilter.class);
 
         http
                 .addFilterBefore(new JWTFilter(jwtUtil), LoginFilter.class);
-
-        http
-                .addFilterAt(loginFilter, UsernamePasswordAuthenticationFilter.class);
 
         http
                 .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil, refreshRepository), UsernamePasswordAuthenticationFilter.class);

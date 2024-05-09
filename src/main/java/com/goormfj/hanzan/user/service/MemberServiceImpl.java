@@ -1,8 +1,8 @@
 package com.goormfj.hanzan.user.service;
 
+import com.goormfj.hanzan.jwt.JWTUtil;
 import com.goormfj.hanzan.user.domain.Member;
-import com.goormfj.hanzan.user.dto.FindUserIdRequest;
-import com.goormfj.hanzan.user.dto.SignUpMemberRequest;
+import com.goormfj.hanzan.user.dto.*;
 import com.goormfj.hanzan.user.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -16,6 +16,7 @@ public class MemberServiceImpl implements MemberService {
 
     private final MemberRepository memberRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final JWTUtil jwtUtil;
 
     @Override
     @Transactional
@@ -41,23 +42,67 @@ public class MemberServiceImpl implements MemberService {
         String email = findUserIdRequest.getEmail();
 
         if (!memberRepository.existsByNameAndEmail(name, email)) {
-            throw new IllegalArgumentException("이름과 이메일에 맞는 회원 정보가 없습니다.");
+            return null;
+//            throw new IllegalArgumentException("이름과 이메일에 맞는 회원 정보가 없습니다.");
+        } else {
+            return memberRepository.findMemberByNameAndEmail(name, email).getUserId();
         }
 
-        return memberRepository.findMemberByNameAndEmail(name, email).getUserId();
+    }
+
+    @Override
+    public Member validateUserForPasswordReset(FindPasswordRequest findPasswordRequest) {
+        String name = findPasswordRequest.getName();
+        String userId = findPasswordRequest.getUserId();
+        String email = findPasswordRequest.getEmail();
+
+        Member existMember = memberRepository.findMemberByNameAndUserIdAndEmail(name, userId, email);
+
+        if (existMember == null) {
+//            throw new IllegalArgumentException("일치하는 회원 정보가 없습니다.");
+            return null;
+        }
+
+        return existMember;
+    }
+
+    @Override
+    public Member reValidateUserForPasswordReset(ResetPasswordRequest resetPasswordRequest) {
+        String name = resetPasswordRequest.getName();
+        String userId = resetPasswordRequest.getUserId();
+        String email = resetPasswordRequest.getEmail();
+
+        Member existMember = memberRepository.findMemberByNameAndUserIdAndEmail(name, userId, email);
+
+        if (existMember == null) {
+//            throw new IllegalArgumentException("일치하는 회원 정보가 없습니다.");
+            return null;
+        }
+
+        return existMember;
+    }
+
+    @Override
+    @Transactional
+    public Boolean updatePassword(Member member, ResetPasswordRequest resetPasswordRequest) {
+
+        String newPassword = resetPasswordRequest.getNewPassword();
+        String newPasswordCheck = resetPasswordRequest.getNewPasswordCheck();
+
+        if (!newPassword.equals(newPasswordCheck)) {
+            throw new IllegalArgumentException("비밀번호 불일치");
+        }
+        member.updatePassword(bCryptPasswordEncoder.encode(resetPasswordRequest.getNewPassword()));
+
+        return true;
     }
 
 
-//    @Override
-//    public Member findMemberByEmail(String email) {
-//        return memberRepository.findMemberByEmail(email);
-//    }
-//
-//    @Override
-//    public Member findMemberByUserId(String userId) {
-//        return memberRepository.findMemberByUserId(userId);
-//    }
-
+    @Override
+    public Boolean checkUserId(CheckUserIdRequest checkUserIdRequest) {
+        String userId = checkUserIdRequest.getUserId();
+        return memberRepository.existsMemberByUserId(userId);
+    }
 
     // 아이디 중복 검사
     private void isUserIdAvailable(String userId) {

@@ -1,5 +1,6 @@
 package com.goormfj.hanzan.jwt;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -22,7 +23,7 @@ public class JWTUtil {
         return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("username", String.class);
     }
 
-    public String getUserId(String token){
+    public String getUserId(String token) {
         return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("userId", String.class);
     }
 
@@ -38,24 +39,27 @@ public class JWTUtil {
         return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().getExpiration().before(new Date());
     }
 
-    public String createJwt(String category, String username, String role, Long expiredMs) {
+    public String createJwt(String category, String userId, String role, Long expiredMs) {
         long now = System.currentTimeMillis();
-
-//        return Jwts.builder()
-//                .claim("username", username)
-//                .claim("role", role)
-//                .issuedAt(new Date(System.currentTimeMillis()))
-//                .expiration(new Date(System.currentTimeMillis() + expiredMs))
-//                .signWith(secretKey)
-//                .compact();
 
         return Jwts.builder()
                 .claim("category", category)
-                .claim("username", username)
+                .claim("username", userId)
                 .claim("role", role)
                 .issuedAt(new Date(now))
                 .setExpiration(new Date(now + expiredMs)) // 만료 시간 설정
                 .signWith(secretKey)
                 .compact();
     }
+
+//    public String createJwt(String userId, Long expiredMs) {
+//        long now = System.currentTimeMillis();
+//        return Jwts.builder()
+//                .claim("username", userId)
+//                .issuedAt(new Date(now))
+//                .setExpiration(new Date(now + expiredMs))
+//                .signWith(secretKey)
+//                .compact();
+//    }
+
 }

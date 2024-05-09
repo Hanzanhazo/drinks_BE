@@ -21,5 +21,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     Member findMemberByNameAndEmail(String name, String email);
 
+    Member findMemberByNameAndUserIdAndEmail(String name, String userId, String email); // 사용자 이름과 이메일로 존재 여부 확인 (쿼리 메소드 사용)
+
 
 }
