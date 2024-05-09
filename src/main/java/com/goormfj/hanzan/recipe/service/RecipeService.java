@@ -120,7 +120,7 @@ public class RecipeService {
         recipe.setName(recipeDTO.getName());
         recipe.setDescription(recipeDTO.getDescription());
         recipe.setType(recipeMapper.typeDTOToString(recipeDTO.getTypes()));
-        recipe.setIngredients(recipeMapper.mapIngredientDTOs(recipeDTO.getIngredients()));
+        recipe.setIngredients(recipeMapper.mapIngredients(recipeDTO.getIngredients()));
         recipe.setSteps(recipeDTO.getSteps());
         recipe.setRecommendationReason(recipeDTO.getRecommendationReason());
         recipe.setTags(recipeDTO.getTags());

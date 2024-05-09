@@ -9,11 +9,10 @@ import com.goormfj.hanzan.recipe.entity.Comment;
 import com.goormfj.hanzan.recipe.entity.Recipe;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.Mappings;
 import org.mapstruct.factory.Mappers;
 
-import java.lang.reflect.Type;
 import java.util.List;
-import java.util.StringJoiner;
 import java.util.stream.Collectors;
 
 @Mapper(componentModel = "spring")
@@ -32,20 +31,27 @@ public interface RecipeMapper {
     List<Comment> mapCommentDTOs(List<CommentDTO> commentDTOs);
 
 
-    default List<IngredientDTO> mapIngredients(List<String> ingredients) {
-        return ingredients.stream()
-                .map(material -> {
+    default List<IngredientDTO> mapIngredients(List<IngredientDTO> IngredientDTOs) {
+        return IngredientDTOs.stream()
+                .map(ingredient -> {
                     IngredientDTO dto = new IngredientDTO();
-                    dto.setMaterial(material);
+                    dto.setId(ingredient.getId());
+                    dto.setMaterial(ingredient.getMaterial());
+                    dto.setQuantity(ingredient.getQuantity());
                     return dto;
                 }).collect(Collectors.toList());
     }
 
-    default List<String> mapIngredientDTOs(List<IngredientDTO> ingredientDTOS) {
-        return ingredientDTOS.stream()
-                .map(IngredientDTO::getQuantity)
-                .collect(Collectors.toList());
-    }
+//    default List<IngredientDTO> mapIngredientDTOs(List<IngredientDTO> ingredientDTOS) {
+//        return ingredientDTOS.stream()
+//                .map(dto -> {
+//                    IngredientDTO newDto = new IngredientDTO();
+//                    newDto.setId(dto.getId());
+//                    newDto.setMaterial(dto.getMaterial());
+//                    newDto.setQuantity(dto.getQuantity());
+//                    return newDto;
+//                }).collect(Collectors.toList());
+//    }
 
     default TypeDTO stringToTypeDTO(String type) {
         TypeDTO typeDTO = new TypeDTO();

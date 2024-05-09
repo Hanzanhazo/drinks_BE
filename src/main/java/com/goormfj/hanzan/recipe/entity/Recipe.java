@@ -1,5 +1,6 @@
 package com.goormfj.hanzan.recipe.entity;
 
+import com.goormfj.hanzan.recipe.dto.IngredientDTO;
 import com.goormfj.hanzan.recipe.dto.StepDTO;
 import lombok.Getter;
 import lombok.Setter;
@@ -21,7 +22,12 @@ public class Recipe {
     private String type;
 
     @ElementCollection
-    private List<String> ingredients = new ArrayList<>();
+    @CollectionTable(name = "recipe_ingredients", joinColumns = @JoinColumn(name = "recipe_id"))
+    @AttributeOverrides({
+            @AttributeOverride(name = "material", column = @Column(name = "material")),
+            @AttributeOverride(name = "quantity", column = @Column(name = "quantity"))
+    })
+    private List<IngredientDTO> ingredients = new ArrayList<>();
 
     @ElementCollection(targetClass = StepDTO.class)
     private List<StepDTO> steps = new ArrayList<>();
