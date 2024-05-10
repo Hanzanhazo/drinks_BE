@@ -66,6 +66,10 @@ public interface RecipeMapper {
     }
 
     default String typeDTOToString(TypeDTO typeDTO) {
+        if (typeDTO == null) {
+            return "";
+        }
+
         StringBuilder typeBuilder = new StringBuilder();
         if (typeDTO.isSojuType()) typeBuilder.append("soju ");
         if (typeDTO.isBeerType()) typeBuilder.append("beer ");
