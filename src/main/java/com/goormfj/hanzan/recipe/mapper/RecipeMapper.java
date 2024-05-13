@@ -27,6 +27,47 @@ public interface RecipeMapper {
     @Mapping(target = "ingredients", source = "ingredientDTOS")
     Recipe recipeDTOToRecipe(RecipeDTO recipeDTO);
 
+    default CommentDTO commentToCommentDTO(Comment comment) {
+        return commentToCommentDTO(comment, 0);
+    }
+
+    default CommentDTO commentToCommentDTO(Comment comment, int depth) {
+        if (comment == null || depth > 3) {
+            return null;
+        }
+
+        CommentDTO dto = new CommentDTO();
+        dto.setId(comment.getId());
+        dto.setText(comment.getText());
+        dto.setAuthor(comment.getAuthor());
+//        dto.setRecipe(comment.getRecipe() != null ? recipeToRecipeDTO(comment.getRecipe()) : null);
+
+//        if (comment.getParentComment() !=null) {
+//            dto.setParentComment(commentToCommentDTO(comment.getParentComment(), depth + 1));
+//        }
+
+        if (comment.getReplies() != null && !comment.getReplies().isEmpty()) {
+            dto.setReplies(comment.getReplies().stream()
+                    .map(reply -> commentToCommentDTO(reply, depth + 1))
+                    .collect(Collectors.toList()));
+        }
+
+        return dto;
+    }
+
+    default Comment commentDTOToComment(CommentDTO commentDTO) {
+        if (commentDTO == null) {
+            return null;
+        }
+
+        Comment comment = new Comment();
+        comment.setId(commentDTO.getId());
+        comment.setText(commentDTO.getText());
+        comment.setAuthor(commentDTO.getAuthor());
+
+        return comment;
+    }
+
     List<CommentDTO> mapComments(List<Comment> comments);
     List<Comment> mapCommentDTOs(List<CommentDTO> commentDTOs);
 
@@ -81,12 +122,12 @@ public interface RecipeMapper {
         return typeBuilder.toString().trim();
     }
 
-    @Mapping(target = "parentComment", source = "parentComment")
-    @Mapping(target = "replies", source = "replies")
-    CommentDTO commentToCommentDTO(Comment comment);
-
-    @Mapping(target = "parentComment", source = "parentComment")
-    @Mapping(target = "replies", source = "replies")
-    Comment commentDTOToComment(CommentDTO commentDTO);
+//    @Mapping(target = "parentComment", source = "parentComment")
+//    @Mapping(target = "replies", source = "replies")
+//    CommentDTO commentToCommentDTO(Comment comment);
+//
+//    @Mapping(target = "parentComment", source = "parentComment")
+//    @Mapping(target = "replies", source = "replies")
+//    Comment commentDTOToComment(CommentDTO commentDTO);
 
 }

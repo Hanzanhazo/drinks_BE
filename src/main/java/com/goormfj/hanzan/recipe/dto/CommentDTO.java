@@ -1,5 +1,6 @@
 package com.goormfj.hanzan.recipe.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import java.util.List;
@@ -9,6 +10,7 @@ public class CommentDTO {
     private Long id;
 
     @NotBlank(message = "Comment text cannot be empty.")
+    @JsonProperty("comment")
     private String text;
 
     @NotBlank(message = "Author cannot be empty.")
