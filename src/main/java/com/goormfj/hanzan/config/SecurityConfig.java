@@ -4,12 +4,17 @@ import com.goormfj.hanzan.jwt.CustomLogoutFilter;
 import com.goormfj.hanzan.jwt.JWTFilter;
 import com.goormfj.hanzan.jwt.JWTUtil;
 import com.goormfj.hanzan.jwt.LoginFilter;
+//import com.goormfj.hanzan.user.oauth2.handler.CustomSuccessHandler;
+//import com.goormfj.hanzan.user.oauth2.service.CustomOAuth2UserService;
+import com.goormfj.hanzan.oauth2.handler.CustomSuccessHandler;
+import com.goormfj.hanzan.oauth2.service.CustomOAuth2UserService;
 import com.goormfj.hanzan.user.repository.RefreshRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -32,6 +37,8 @@ public class SecurityConfig {
     private final AuthenticationConfiguration authenticationConfiguration;
     private final JWTUtil jwtUtil;
     private final RefreshRepository refreshRepository;
+    private final CustomOAuth2UserService customOAuth2UserService;
+    private final CustomSuccessHandler customSuccessHandler;
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
@@ -86,16 +93,20 @@ public class SecurityConfig {
         // 경로별 인가 작업
         http
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/", "/login/**", "/signup/check-userid", "/signup/**", "/find-userId", "/find-password", "/reset-password").permitAll()
+                        .requestMatchers("/", "/login/**", "/oauth2/**", "/signup/check-userid", "/signup/**", "/find-userId", "/find-password", "/reset-password").permitAll()
                         .requestMatchers("/error").permitAll()
-                        .requestMatchers("/api/users/admin").hasRole("ADMIN")
                         .requestMatchers("/reissue").permitAll()
                         .anyRequest().authenticated());
 
-        // 필터 추가
+        //oauth2
         http
-                .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil, refreshRepository), UsernamePasswordAuthenticationFilter.class);
+                .oauth2Login((oauth2) -> oauth2
+                        .userInfoEndpoint((userInfoEndpointConfig) -> userInfoEndpointConfig
+                                .userService(customOAuth2UserService))
+                        .successHandler(customSuccessHandler)
+                );
 
+        // 필터 추가
         http
                 .addFilterBefore(new JWTFilter(jwtUtil), LoginFilter.class);
 
@@ -104,6 +115,7 @@ public class SecurityConfig {
 
         http
                 .addFilterBefore(new CustomLogoutFilter(jwtUtil, refreshRepository), LogoutFilter.class);
+
         // 세션 설정
         http.
                 sessionManagement((session) -> session

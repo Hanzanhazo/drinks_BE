@@ -24,6 +24,7 @@ public class Member {
     @Column(nullable = false)
     private String email;
 
+    @Column(nullable = false)
     private String name;
 
     private LocalDate localDate;
@@ -56,8 +57,23 @@ public class Member {
         this.role = Role.USER;
     }
 
+//    // 소셜 회원가입
+//    public Member(String name, String userId, String email) {
+//        this.name = name;
+//        this.userId = userId;
+//        this.email = email;
+//        this.role = Role.USER;
+//    }
+
     // 비밀번호 업데이트
     public void updatePassword(String password) {
         this.password = password;
     }
+
+    // 소셜로그인 이메일, 닉네임 업데이트
+    public void updateSocialLogin(String email, String name) {
+        this.email = email;
+        this.name = name;
+    }
+
 }

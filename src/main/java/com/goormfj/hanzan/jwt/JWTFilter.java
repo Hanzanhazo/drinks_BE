@@ -1,8 +1,12 @@
 package com.goormfj.hanzan.jwt;
 
+import com.goormfj.hanzan.oauth2.dto.CustomOAuth2User;
 import com.goormfj.hanzan.user.domain.CustomUserDetails;
 import com.goormfj.hanzan.user.domain.Member;
 import com.goormfj.hanzan.user.domain.Role;
+//import com.goormfj.hanzan.user.dto.MemberDTO;
+//import com.goormfj.hanzan.user.oauth2.dto.CustomOAuth2User;
+import com.goormfj.hanzan.user.dto.MemberDTO;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -16,6 +20,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.regex.Pattern;
 
 @RequiredArgsConstructor
 public class JWTFilter extends OncePerRequestFilter {
@@ -24,8 +29,20 @@ public class JWTFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        String requestUri = request.getRequestURI();
 
-        String accessToken = request.getHeader("access");
+        if (requestUri.matches("^\\/login(?:\\/.*)?$")) {
+
+            filterChain.doFilter(request, response);
+            return;
+        }
+        if (requestUri.matches("^\\/oauth2(?:\\/.*)?$")) {
+
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+        String accessToken = request.getHeader("Authorization");
         // 토큰이 없다면 다음 필터로 넘김
         if (accessToken == null) {
 
@@ -68,11 +85,27 @@ public class JWTFilter extends OncePerRequestFilter {
         Role role = Role.valueOf(roleString);
 
         // 사용자 정보 설정
-        Member member = new Member(userId, "", role);
-        CustomUserDetails customUserDetails = new CustomUserDetails(member);
 
-        // 스프링 시큐리티 인증 토큰 생성 및 등록
-        Authentication authToken = new UsernamePasswordAuthenticationToken(customUserDetails, null, customUserDetails.getAuthorities());
+        Authentication authToken = null;
+
+        if (Pattern.matches("^kakao\\s.*", userId)) {
+            MemberDTO memberDTO = new MemberDTO();
+            memberDTO.setUserId(userId);
+            memberDTO.setRole(roleString);
+
+            CustomOAuth2User customOAuth2User = new CustomOAuth2User(memberDTO);
+
+//            스프링 시큐리티 인증 토큰 생성
+            authToken = new UsernamePasswordAuthenticationToken(customOAuth2User, null, customOAuth2User.getAuthorities());
+        } else {
+            Member member = new Member(userId, "", role);
+            CustomUserDetails customUserDetails = new CustomUserDetails(member);
+
+            // 스프링 시큐리티 인증 토큰 생성 및 등록
+            authToken = new UsernamePasswordAuthenticationToken(customUserDetails, null, customUserDetails.getAuthorities());
+
+        }
+
         SecurityContextHolder.getContext().setAuthentication(authToken);
 
         filterChain.doFilter(request, response);

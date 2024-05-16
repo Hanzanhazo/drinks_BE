@@ -44,7 +44,7 @@ public class JWTUtil {
 
         return Jwts.builder()
                 .claim("category", category)
-                .claim("username", userId)
+                .claim("userId", userId)
                 .claim("role", role)
                 .issuedAt(new Date(now))
                 .setExpiration(new Date(now + expiredMs)) // 만료 시간 설정

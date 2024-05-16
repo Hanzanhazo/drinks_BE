@@ -68,11 +68,9 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public Member reValidateUserForPasswordReset(ResetPasswordRequest resetPasswordRequest) {
-        String name = resetPasswordRequest.getName();
         String userId = resetPasswordRequest.getUserId();
-        String email = resetPasswordRequest.getEmail();
 
-        Member existMember = memberRepository.findMemberByNameAndUserIdAndEmail(name, userId, email);
+        Member existMember = memberRepository.findMemberByUserId(userId);
 
         if (existMember == null) {
 //            throw new IllegalArgumentException("일치하는 회원 정보가 없습니다.");
@@ -90,10 +88,11 @@ public class MemberServiceImpl implements MemberService {
         String newPasswordCheck = resetPasswordRequest.getNewPasswordCheck();
 
         if (!newPassword.equals(newPasswordCheck)) {
-            throw new IllegalArgumentException("비밀번호 불일치");
+            throw new IllegalArgumentException("새 비밀번호가 일치하지 않습니다.");
         }
-        member.updatePassword(bCryptPasswordEncoder.encode(resetPasswordRequest.getNewPassword()));
 
+        member.updatePassword(bCryptPasswordEncoder.encode(resetPasswordRequest.getNewPassword()));
+        memberRepository.save(member);
         return true;
     }
 
