@@ -1,4 +1,4 @@
-package com.goormfj.hanzan.chat.handler;
+package com.goormfj.hanzan.handler;
 
 import com.goormfj.hanzan.chat.domain.ChatDTO;
 import com.goormfj.hanzan.chat.service.ChatService;
