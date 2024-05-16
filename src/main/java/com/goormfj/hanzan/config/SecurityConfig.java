@@ -93,7 +93,7 @@ public class SecurityConfig {
         // 경로별 인가 작업
         http
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/", "/login/**", "/oauth2/**", "/signup/check-userid", "/signup/**", "/find-userId", "/find-password", "/reset-password").permitAll()
+                        .requestMatchers("/", "/login/**", "/oauth2/**", "/signup/check-userid", "/signup/**", "/find-userId", "/find-password", "/reset-password", "/chat/**", "/index.html", "/websocket/**").permitAll()
                         .requestMatchers("/error").permitAll()
                         .requestMatchers("/reissue").permitAll()
                         .anyRequest().authenticated());
