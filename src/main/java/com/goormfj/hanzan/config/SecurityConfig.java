@@ -94,6 +94,7 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests((auth) -> auth
                         .requestMatchers("/", "/login/**", "/oauth2/**", "/signup/check-userid", "/signup/**", "/find-userId", "/find-password", "/reset-password").permitAll()
+                        .requestMatchers("/chat/**", "/index.html", "/ws/**").permitAll() // 채팅
                         .requestMatchers("/error").permitAll()
                         .requestMatchers("/reissue").permitAll()
                         .anyRequest().authenticated());
