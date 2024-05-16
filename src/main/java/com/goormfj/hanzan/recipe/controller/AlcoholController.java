@@ -17,7 +17,10 @@ public class AlcoholController {
     private  AlcoholService alcoholService;
 
     @GetMapping
-    public ResponseEntity<Page<AlcoholDTO>> getAlcoholsByType(@RequestParam String type, Pageable pageable) {
+    public ResponseEntity<Page<AlcoholDTO>> getAlcohols(@RequestParam(required = false) String type, Pageable pageable) {
+        if (type == null || type.isEmpty()) {
+            return ResponseEntity.ok(alcoholService.getAllAlcohols(pageable));
+        }
         return ResponseEntity.ok(alcoholService.getAlcoholsByType(type, pageable));
     }
 

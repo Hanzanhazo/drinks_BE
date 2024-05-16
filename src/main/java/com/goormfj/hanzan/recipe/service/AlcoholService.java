@@ -16,6 +16,11 @@ public class AlcoholService {
 
     public Page<AlcoholDTO> getAlcoholsByType(String type, Pageable pageable) {
         return alcoholRepository.findByType(type, pageable)
+                .map(this::convertToDTO);
+    }
+
+    public Page<AlcoholDTO> getAllAlcohols(Pageable pageable) {
+        return alcoholRepository.findAll(pageable)
                                 .map(this::convertToDTO);
     }
 
