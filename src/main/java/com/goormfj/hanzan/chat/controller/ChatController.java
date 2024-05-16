@@ -2,8 +2,8 @@ package com.goormfj.hanzan.chat.controller;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.goormfj.hanzan.chat.domain.ChatDTO;
-import com.goormfj.hanzan.chat.domain.ChatRoomDTO;
+import com.goormfj.hanzan.chat.dto.ChatDTO;
+import com.goormfj.hanzan.chat.dto.ChatRoomDTO;
 import com.goormfj.hanzan.chat.service.ChatService;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;

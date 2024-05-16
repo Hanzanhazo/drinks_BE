@@ -1,5 +1,6 @@
 package com.goormfj.hanzan.chat.domain;
 
+import com.goormfj.hanzan.chat.dto.ChatDTO;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
