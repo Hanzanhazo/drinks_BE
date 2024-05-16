@@ -33,17 +33,19 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             e.printStackTrace();
         }
 
-//        String oauthClientName = userRequest.getClientRegistration().getClientName();
-//
-//        Member member = null;
-//        String userId = null;
-//
-//        if (oauthClientName.equals("kakao")) {
-//            userId = "kakao_" + oAuth2User.getAttributes().get("id");
-//            member = new Member()
-//        }
+        String oauthClientName = userRequest.getClientRegistration().getClientName();
 
-      String registrationId = userRequest.getClientRegistration().getRegistrationId();
+        Member member = null;
+        String userId = null;
+
+        if (oauthClientName.equals("kakao")) {
+            userId = "kakao_" + oAuth2User.getAttributes().get("id");
+            member = new Member();
+        }
+
+        return oAuth2User;
+/*
+        String registrationId = userRequest.getClientRegistration().getRegistrationId();
         OAuth2Response oAuth2Response = null;
 
         if (registrationId.equals("kakao")) {
@@ -87,7 +89,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             memberDTO.setRole(existData.getRole().toString());
 
             return new CustomOAuth2User(memberDTO);
-        }
+        }*/
 
     }
 
