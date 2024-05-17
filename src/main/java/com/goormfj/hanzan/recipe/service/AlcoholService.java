@@ -44,4 +44,18 @@ public class AlcoholService {
 
         return dto;
     }
+
+    public AlcoholDTO createAlcohol(AlcoholDTO alcoholDTO) {
+        Alcohol alcohol = new Alcohol();
+        alcohol.setName(alcoholDTO.getName());
+        alcohol.setDescription(alcoholDTO.getDescription());
+        alcohol.setType(alcoholDTO.getType());
+        alcohol.setVolume(alcoholDTO.getVolume());
+        alcohol.setAlcoholContent(alcoholDTO.getAlcoholContent());
+        alcohol.setCountry(alcoholDTO.getCountry());
+        alcohol.setImageUrl(alcoholDTO.getImageUrl());
+        alcoholRepository.save(alcohol);
+
+        return convertToDTO(alcohol);
+    }
 }

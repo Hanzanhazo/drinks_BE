@@ -6,6 +6,8 @@ import com.goormfj.hanzan.recipe.service.AlcoholService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,5 +30,11 @@ public class AlcoholController {
     @GetMapping("/{id}")
     public ResponseEntity<AlcoholDTO> getAlcoholDetails(@PathVariable Long id) {
         return ResponseEntity.ok(alcoholService.getAlcoholDetails(id));
+    }
+
+    @PostMapping
+    public ResponseEntity<AlcoholDTO> createAlcohol(@RequestBody AlcoholDTO alcoholDTO) {
+        AlcoholDTO createdAlcohol = alcoholService.createAlcohol(alcoholDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdAlcohol);
     }
 }
