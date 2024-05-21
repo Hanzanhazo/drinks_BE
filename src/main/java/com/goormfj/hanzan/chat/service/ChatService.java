@@ -42,6 +42,8 @@ public class ChatService {
         return ChatRoomDTO.builder()
                 .roomId(chatRoom.getRoomId())
                 .name(chatRoom.getName())
+                .thumbnailUrl(chatRoom.getThumbnailUrl())
+                .userIds(new ArrayList<>(chatRoom.getUserIds()))
                 .build();
     }
 

@@ -27,9 +27,11 @@ public class ChatRoomDTO {
     private Set<WebSocketSession> sessions = new HashSet<>();
 
     @Builder
-    public ChatRoomDTO(String roomId, String name){
+    public ChatRoomDTO(String roomId, String name, List<String> userIds, String thumbnailUrl) {
         this.roomId = roomId;
         this.name = name;
+        this.userIds = userIds;
+        this.thumbnailUrl = thumbnailUrl;
     }
 
 }
