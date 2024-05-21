@@ -5,6 +5,7 @@ import com.goormfj.hanzan.oauth2.dto.CustomOAuth2User;
 import com.goormfj.hanzan.oauth2.dto.KakaoResponse;
 import com.goormfj.hanzan.oauth2.dto.OAuth2Response;
 import com.goormfj.hanzan.user.domain.Member;
+import com.goormfj.hanzan.user.domain.Role;
 import com.goormfj.hanzan.user.dto.MemberDTO;
 import com.goormfj.hanzan.user.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -32,8 +33,6 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-//        String oauthClientName = userRequest.getClientRegistration().getClientName();
 
         OAuth2Response oAuth2Response = null;
 
@@ -65,7 +64,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             memberDTO.setName(name);
             memberDTO.setEmail(email);
             memberDTO.setUserId(userId);
-            memberDTO.setRole("ROLE_USER");
+            memberDTO.setRole(Role.USER);
 
             return new CustomOAuth2User(memberDTO);
         }
@@ -79,7 +78,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             memberDTO.setName(existData.getName());
             memberDTO.setEmail(existData.getEmail());
             memberDTO.setUserId(existData.getUserId());
-            memberDTO.setRole(existData.getRole().toString());
+            memberDTO.setRole(existData.getRole());
 
             return new CustomOAuth2User(memberDTO);
         }

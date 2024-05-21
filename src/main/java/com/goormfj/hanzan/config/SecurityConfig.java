@@ -8,6 +8,8 @@ import com.goormfj.hanzan.jwt.LoginFilter;
 //import com.goormfj.hanzan.user.oauth2.service.CustomOAuth2UserService;
 import com.goormfj.hanzan.oauth2.handler.CustomSuccessHandler;
 import com.goormfj.hanzan.oauth2.service.CustomOAuth2UserService;
+import com.goormfj.hanzan.user.domain.Member;
+import com.goormfj.hanzan.user.repository.MemberRepository;
 import com.goormfj.hanzan.user.repository.RefreshRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +23,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationFilter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
@@ -39,6 +42,7 @@ public class SecurityConfig {
     private final RefreshRepository refreshRepository;
     private final CustomOAuth2UserService customOAuth2UserService;
     private final CustomSuccessHandler customSuccessHandler;
+    private final MemberRepository memberRepository;
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
@@ -96,8 +100,11 @@ public class SecurityConfig {
                         .requestMatchers("/", "/login/**", "/oauth2/**", "/signup/check-userid", "/signup/**", "/find-userId", "/find-password", "/reset-password", "/chat/**", "/index.html", "/websocket/**").permitAll()
                         .requestMatchers("/error").permitAll()
                         .requestMatchers("/reissue").permitAll()
+                        .requestMatchers("/userinfo").authenticated()
                         .anyRequest().authenticated());
 
+        http
+                .addFilterBefore(new JWTFilter(jwtUtil, memberRepository), LoginFilter.class);
         //oauth2
         http
                 .oauth2Login((oauth2) -> oauth2
@@ -108,11 +115,9 @@ public class SecurityConfig {
 
         // 필터 추가
         http
-                .addFilterBefore(new JWTFilter(jwtUtil), LoginFilter.class);
-
-        http
                 .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil, refreshRepository), UsernamePasswordAuthenticationFilter.class);
-
+//        http
+//                .addFilterAfter(new JWTFilter(jwtUtil), OAuth2LoginAuthenticationFilter.class);
         http
                 .addFilterBefore(new CustomLogoutFilter(jwtUtil, refreshRepository), LogoutFilter.class);
 

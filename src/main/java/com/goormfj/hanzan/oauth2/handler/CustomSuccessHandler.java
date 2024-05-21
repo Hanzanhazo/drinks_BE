@@ -3,6 +3,7 @@ package com.goormfj.hanzan.oauth2.handler;
 import com.goormfj.hanzan.jwt.JWTUtil;
 import com.goormfj.hanzan.oauth2.dto.CustomOAuth2User;
 import com.goormfj.hanzan.user.domain.RefreshEntity;
+import com.goormfj.hanzan.user.domain.Role;
 import com.goormfj.hanzan.user.repository.RefreshRepository;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
@@ -36,14 +37,27 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         String userId = customUserDetails.getUserId();
 
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
+
+        if (authorities.isEmpty()) {
+            throw new IllegalArgumentException("No authorities assigned to user");
+        }
+
         Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
         GrantedAuthority auth = iterator.next();
-        String role = auth.getAuthority();
+
+        String authority = auth.getAuthority(); // 예: "ROLE_USER"
+        String role = authority.startsWith("ROLE_") ? authority.substring(5) : authority;
+
+        Role roleEnum;
+        try {
+            roleEnum = Role.valueOf(role);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Invalid role: " + role);
+        }
 
         //토큰 생성
-        String access = jwtUtil.createJwt("access", userId, role, 60*60*60L);
-        String refresh = jwtUtil.createJwt("refresh", userId, role, 86400000L);
-        addRefreshEntity(userId, refresh, 86400000L);
+        String access = jwtUtil.createJwt("access", userId, roleEnum.name(), 600000L);
+        String refresh = jwtUtil.createJwt("refresh", userId, roleEnum.name(), 86400000L);
 
         //응답 설정
         response.setHeader("Authorization", "Bearer " + access);

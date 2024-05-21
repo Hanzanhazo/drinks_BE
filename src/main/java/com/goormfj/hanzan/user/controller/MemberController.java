@@ -1,5 +1,7 @@
 package com.goormfj.hanzan.user.controller;
 
+import com.goormfj.hanzan.oauth2.dto.CustomOAuth2User;
+import com.goormfj.hanzan.user.domain.CustomUserDetails;
 import com.goormfj.hanzan.user.domain.Member;
 import com.goormfj.hanzan.user.dto.*;
 import com.goormfj.hanzan.user.service.MemberService;
@@ -8,6 +10,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -92,5 +98,41 @@ public class MemberController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User validation failed.");
         }
 
+    }
+
+    @GetMapping("/userinfo")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<UserInfoResponse> getUserInfo() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Object principal = authentication.getPrincipal();
+
+        if (principal instanceof CustomUserDetails) {
+            return buildResponse((CustomUserDetails) principal);
+        } else if (principal instanceof CustomOAuth2User) {
+            return buildResponse((CustomOAuth2User) principal);
+        }
+
+        // 예외 처리 또는 다른 타입의 principal 처리 로직
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+    }
+
+    private ResponseEntity<UserInfoResponse> buildResponse(CustomUserDetails userDetails) {
+        log.info("CustomUserDetails -> ID: {}, Name: {}, Email: {}",
+                userDetails.getUserId(), userDetails.getUsername(), userDetails.getEmail());
+
+        UserInfoResponse userInfo = new UserInfoResponse(
+                userDetails.getUserId(), userDetails.getUsername(), userDetails.getEmail()
+        );
+        return ResponseEntity.ok(userInfo);
+    }
+
+    private ResponseEntity<UserInfoResponse> buildResponse(CustomOAuth2User oauthUser) {
+        log.info("CustomOAuth2User -> ID: {}, Name: {}, Email: {}",
+                oauthUser.getUserId(), oauthUser.getName(), oauthUser.getEmail());
+
+        UserInfoResponse userInfo = new UserInfoResponse(
+                oauthUser.getUserId(), oauthUser.getName(), oauthUser.getEmail()
+        );
+        return ResponseEntity.ok(userInfo);
     }
 }

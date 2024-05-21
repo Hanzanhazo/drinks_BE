@@ -3,6 +3,7 @@ package com.goormfj.hanzan.oauth2.dto;
 import com.goormfj.hanzan.user.dto.MemberDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import java.util.ArrayList;
@@ -25,14 +26,15 @@ public class CustomOAuth2User implements OAuth2User {
 
         Collection<GrantedAuthority> collection = new ArrayList<>();
 
-        collection.add(new GrantedAuthority() {
-
-            @Override
-            public String getAuthority() {
-
-                return memberDTO.getRole();
-            }
-        });
+//        collection.add(new GrantedAuthority() {
+//
+//            @Override
+//            public String getAuthority() {
+//
+//                return memberDTO.getRole();
+//            }
+//        });
+        collection.add(new SimpleGrantedAuthority("ROLE_" + memberDTO.getRole().name()));
 
         return collection;
     }
@@ -44,5 +46,9 @@ public class CustomOAuth2User implements OAuth2User {
 
     public String getUserId() {
         return memberDTO.getUserId();
+    }
+
+    public String getEmail() {
+        return memberDTO.getEmail();
     }
 }
