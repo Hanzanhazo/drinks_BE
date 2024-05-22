@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>결과 페이지</title>
+</head>
+<body>
+    <h1>두구두구... 당신의 타임은...?</h1>
+    <h2>새로운 건 언제나 나!</h2>
+    <div id="result"></div>
+
+    <script>
+        // 답변 데이터
+        const answerData = [
+            {
+                type: 1,
+                answers: ['A', 'A', 'A', 'D'],
+                description: '가벼운 사교 활동을 즐기는 타입<br>가볍고 편안한 분위기가 좋아요<br>친구들과 달달하고 부담 없는 술을 마시길 좋아해요',
+                recommendations: ['모스카토 와인', '스위트 칵테일', '라이트 럼']
+            },
+            // 다른 타입 데이터 추가...
+        ];
+
+        // 사용자 답변 가져오기
+        const userAnswers = [];
+        userAnswers.push(prompt('1번 질문에 대한 답변을 입력하세요 (A, B, C, D)', ''));
+        userAnswers.push(prompt('2번 질문에 대한 답변을 입력하세요 (A, B, C, D)', ''));
+        userAnswers.push(prompt('3번 질문에 대한 답변을 입력하세요 (A, B, C, D)', ''));
+        userAnswers.push(prompt('4번 질문에 대한 답변을 입력하세요 (A, B, C, D)', ''));
+
+        // 사용자 답변에 따른 타입 결정
+        const userType = answerData.find(data => JSON.stringify(data.answers) === JSON.stringify(userAnswers));
+
+        if (userType) {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = `
+                <h2>당신의 타입은 ${userType.type}번입니다!</h2>
+                <p>${userType.description}</p>
+                <p>추천 술: ${userType.recommendations.join(', ')}</p>
+            `;
+        } else {
+            // 일치하는 타입이 없을 경우 랜덤으로 타입 선택
+            const randomType = answerData[Math.floor(Math.random() * answerData.length)];
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = `
+                <h2>당신의 타입은 ${randomType.type}번입니다!</h2>
+                <p>${randomType.description}</p>
+                <p>추천 술: ${randomType.recommendations.join(', ')}</p>
+            `;
+        }
+    </script>
+</body>
+</html>
