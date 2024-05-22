@@ -2,6 +2,7 @@ package com.goormfj.hanzan.recipe.service;
 
 import com.goormfj.hanzan.recipe.dto.AlcoholDTO;
 import com.goormfj.hanzan.recipe.entity.Alcohol;
+import com.goormfj.hanzan.recipe.exception.AlcoholNotFoundException;
 import com.goormfj.hanzan.recipe.repository.AlcoholRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -24,9 +25,15 @@ public class AlcoholService {
                                 .map(this::convertToDTO);
     }
 
+//    public AlcoholDTO getAlcoholDetails(Long id) {
+//        Alcohol alcohol = alcoholRepository.findById(id)
+//                .orElseThrow(() -> new RuntimeException("Alcohol not found"));
+//        return convertToDTO(alcohol);
+//    }
+
     public AlcoholDTO getAlcoholDetails(Long id) {
         Alcohol alcohol = alcoholRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Alcohol not found"));
+                .orElseThrow(() -> new AlcoholNotFoundException("Alcohol with ID " + id + " not found"));
         return convertToDTO(alcohol);
     }
 
